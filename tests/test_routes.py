@@ -142,3 +142,13 @@ class TestAccountService(TestCase):
         "It should return a 404 error when an account is not found"
         response = self.client.get(f"{BASE_URL}/999", content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_list_accounts(self):
+        "It should list all available accounts"
+        self._create_accounts(10)
+
+        response = self.client.get(f"{BASE_URL}", content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        retrieved_accounts = response.get_json()
+        self.assertEqual(len(retrieved_accounts), 10)
